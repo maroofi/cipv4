@@ -32,6 +32,7 @@ struct _cipv4_ctx{
 
 
 
+void cipv4_free(cipv4_ctx * ctx);
 cipv4_ctx * cipv4_parse_ip(const char * ip);
 char * cipv4_get_network_address(cipv4_ctx ctx);
 char * cipv4_get_broadcast_address(cipv4_ctx ctx);

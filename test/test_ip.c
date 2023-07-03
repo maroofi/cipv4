@@ -43,7 +43,7 @@ void test_ip_to_int(){
 }
 
 void test_int_to_ip(){
-    char buffer[20];
+    char buffer[20] = {0};
     assert(strcmp(cipv4_uint_to_str(1869573999, buffer), "111.111.111.111") == 0);
     assert(strcmp(cipv4_uint_to_str(66051, buffer), "0.1.2.3") == 0);
     assert(strcmp(cipv4_uint_to_str(0, buffer), "0.0.0.0") == 0);
@@ -71,6 +71,7 @@ void test_general(){
     assert(cipv4_is_address_in(ctx, "10.20.31.25") == 0);
     assert(cipv4_is_reserved(cipv4_parse_ip("240.0.0.5")) == 1);
     assert(cipv4_is_reserved_from_string("241.0.0.5") == 1);
+    cipv4_free(ctx);
 }
 
 

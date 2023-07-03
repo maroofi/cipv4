@@ -23,7 +23,18 @@ static char _cipv4_ip_private[CIPV4_PRAVATE_ARRAY_LENGTH][19] = {"0.0.0.0/8", "1
 
 static cipv4_ctx* cipv4_init(void);
 
-
+/**
+ * @brief Free the memory allocated for the context created by cipv4_parse_ip()
+ * @return nothing
+ */
+void cipv4_free(cipv4_ctx * ctx){
+    if (!ctx)
+        return;
+    if (ctx->raw)
+        free(ctx->raw);
+    free(ctx->err_msg);
+    free(ctx);
+}
 
 
 /**
@@ -417,6 +428,8 @@ const char * cipv4_uint_to_str(uint32_t addr, const char * buffer){
  * @param A pointer to the null-terminated string contains IPv4 address
  * @return A pointer to the allocated memory of type cipv4_ctx or NULL
  * in case of error.
+ * 
+ * make sure that the input is not NULL before passing it to the function.
  *
  * @code
  * int main()
@@ -432,12 +445,6 @@ const char * cipv4_uint_to_str(uint32_t addr, const char * buffer){
  * @endcode
  */
 cipv4_ctx * cipv4_parse_ip(const char * ip){
-    // accepting an IP interface from the input, it will
-    // parse the ip address and return the ip structure
-    // the input can have an optional prefix
-    // input: 1.2.3.4[/1~32]
-    // you should validate whether the input is null or not 
-    // before passing it to this function
     if (NULL == ip || str_len(ip) > 20)     // what can I do?
         return NULL;
     char tmp[20] = {0};
