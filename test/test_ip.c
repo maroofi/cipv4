@@ -74,8 +74,6 @@ void test_general(){
     cipv4_free(ctx);
 }
 
-
-
 int main(){
     test_if_ip_valid();
     test_ip_to_int();
