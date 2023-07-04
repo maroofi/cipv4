@@ -414,11 +414,11 @@ const char * cipv4_uint_to_str(uint32_t addr, const char * buffer){
         part = (addr >> (8* shft--)) & 0xFF;
         sprintf(tmp, "%d", part);
         if (i<3){
-            len = str_len(tmp);
+            len = cstr_len(tmp);
             tmp[len] = '.';
             tmp[len +1] = '\0';
         }
-        tmp = tmp + str_len(tmp);
+        tmp = tmp + cstr_len(tmp);
     }
     return buffer;
 }
@@ -445,13 +445,13 @@ const char * cipv4_uint_to_str(uint32_t addr, const char * buffer){
  * @endcode
  */
 cipv4_ctx * cipv4_parse_ip(const char * ip){
-    if (NULL == ip || str_len(ip) > 20)     // what can I do?
+    if (NULL == ip || cstr_len(ip) > 20)     // what can I do?
         return NULL;
     char tmp[20] = {0};
-    str_ncpy(tmp, ip, 19);
+    cstr_ncpy(tmp, ip, 19);
     int has_prefix = 0;
     char * prefix_pos = NULL;
-    prefix_pos = str_chr(tmp, '/');
+    prefix_pos = cstr_chr(tmp, '/');
     if (prefix_pos != NULL)
         has_prefix = 1;
     cipv4_ctx * ctx = cipv4_init();
@@ -467,29 +467,29 @@ cipv4_ctx * cipv4_parse_ip(const char * ip){
     // check if ip part is valid
     unsigned int prefix = 32;
     if (has_prefix)
-        prefix = str_to_uint(prefix_pos+1);
+        prefix = cstr_to_uint(prefix_pos+1);
     if (prefix > 32 || prefix < 1){
-        str_cpy(ctx->err_msg, "Wrong prefix provided");
+        cstr_cpy(ctx->err_msg, "Wrong prefix provided");
         ctx->error = 2;
         return ctx;
     }
     if (has_prefix && *(prefix_pos+1) == '0'){
-        str_cpy(ctx->err_msg, "Wrong prefix provided");
+        cstr_cpy(ctx->err_msg, "Wrong prefix provided");
         ctx->error = 2;
         return ctx;
     }
     ctx->network_prefix = prefix;
     ctx->error = 0;
     ctx->err_msg[0] = '\0';
-    ctx->raw = (char*) malloc(str_len(ip)+1);
+    ctx->raw = (char*) malloc(cstr_len(ip)+1);
     ctx->addr = cipv4_str_to_uint(tmp);
     if (!ctx->raw){
         ctx->error = 3;
-        str_cpy(ctx->err_msg, "Can not allocate memory");
+        cstr_cpy(ctx->err_msg, "Can not allocate memory");
         ctx->raw = NULL;
         return ctx;
     }
-    str_cpy(ctx->raw, ip);
+    cstr_cpy(ctx->raw, ip);
     if (ctx->network_prefix == 32){
         ctx->addr_start = ctx->addr;
         ctx->addr_end = ctx->addr;
@@ -523,12 +523,12 @@ uint32_t cipv4_str_to_uint(const char *ip){
     char buffer[4] = {0};
     char * dot_pos = NULL;
     for (i=0; i< 3; i++){
-        dot_pos = str_chr(tmp, DOT);
+        dot_pos = cstr_chr(tmp, DOT);
         j = 0;
         while(tmp < dot_pos)
             buffer[j++] = *tmp++;
         buffer[j] = '\0';
-        part = str_to_uint(buffer);
+        part = cstr_to_uint(buffer);
         result = result + (part << ((3-i)*8));
         tmp = dot_pos+1;
     }
@@ -536,7 +536,7 @@ uint32_t cipv4_str_to_uint(const char *ip){
     while (*tmp)
         buffer[i++] = *tmp++;
     buffer[i] = '\0';
-    part = str_to_uint(buffer);
+    part = cstr_to_uint(buffer);
     result = result + part;
     return result;
 }
@@ -547,7 +547,7 @@ uint32_t cipv4_str_to_uint(const char *ip){
  * @return 1 if the IP address is valid 0 otherwise.
  */
 int cipv4_is_ip_valid(const char * ip){
-    if ((!ip) || (str_len(ip) < 7) || (str_count(ip, DOT) != 3) || (str_len(ip) > 15)) 
+    if ((!ip) || (cstr_len(ip) < 7) || (cstr_count(ip, DOT) != 3) || (cstr_len(ip) > 15)) 
         return 0;
     char * tmp = (char*)ip;
     char * dot_pos = NULL;
@@ -558,36 +558,36 @@ int cipv4_is_ip_valid(const char * ip){
     unsigned int part = 0;
     size_t buffer_len = 0;
     for(i =0; i<3; i++){
-        dot_pos = str_chr(tmp, DOT);
+        dot_pos = cstr_chr(tmp, DOT);
         j = 0;
         while (tmp<dot_pos){
-            if (!is_digit(*tmp))
+            if (!cis_digit(*tmp))
                 return 0;
             buffer[j] = *tmp;
             tmp++;
             j++;
         }
         buffer[j] = '\0';
-        buffer_len = str_len(buffer);
+        buffer_len = cstr_len(buffer);
         if ((buffer_len > 1 && buffer[0] == '0') || (buffer_len == 0))
             return 0;
 
-        part = str_to_uint(buffer);
+        part = cstr_to_uint(buffer);
         if (part > 255 || part < 0)
             return 0;
         tmp = dot_pos+1;
     }
     i = 0;
     while (*tmp){
-        if (!is_digit(*tmp))
+        if (!cis_digit(*tmp))
             return 0;
         buffer[i++] = *tmp++;
     }
     buffer[i] = '\0';
-    buffer_len = str_len(buffer);
+    buffer_len = cstr_len(buffer);
     if ((buffer_len > 1 && buffer[0] == '0') || (buffer_len == 0))
         return 0;
-    part = str_to_uint(buffer);
+    part = cstr_to_uint(buffer);
     if (part < 0 || part > 255)
         return 0;
     return is_invalid == 1?0:1;           // valid
