@@ -66,7 +66,7 @@ unsigned long long int cstr_len(const char * str){
 }
 
 // same as strcasecmp. str1 and str2 can not be NULL
-int str_ccmp(const char * str1, const char * str2){
+int cstr_ccmp(const char * str1, const char * str2){
     char * s1 = (char *) str1;
     char * s2 = (char *) str2;
     while (*s1 != '\0' && *s2 != '\0' && cto_lower(*s1) == cto_lower(*s2)){
