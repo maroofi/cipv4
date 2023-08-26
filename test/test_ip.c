@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <cipv4.h>
 
-void test_if_ip_valid(){
+int test_if_ip_valid(){
     assert(cipv4_is_ip_valid("123.36.58.203") == 1);
     assert(cipv4_is_ip_valid("123.36.58.0203") == 0);
     assert(cipv4_is_ip_valid("123.36.58.0") == 1);
@@ -27,9 +27,10 @@ void test_if_ip_valid(){
     assert(cipv4_is_ip_valid("0") == 0);
     assert(cipv4_is_ip_valid("1.2.333.1") == 0);
     assert(cipv4_is_ip_valid(".") == 0);
+    return 0;
 }
 
-void test_ip_to_int(){
+int test_ip_to_int(){
     assert(cipv4_str_to_uint("0.1.2.3") == 66051);
     assert(cipv4_str_to_uint("0.0.0.0") == 0);
     assert(cipv4_str_to_uint("255.255.255.255") == 4294967295);
@@ -40,9 +41,10 @@ void test_ip_to_int(){
     assert(cipv4_str_to_uint("127.127.127.127") == 2139062143);
     assert(cipv4_str_to_uint("7.7.7.7") == 117901063);
     assert(cipv4_str_to_uint("111.111.111.111") == 1869573999);
+    return 0;
 }
 
-void test_int_to_ip(){
+int test_int_to_ip(){
     char buffer[20] = {0};
     assert(strcmp(cipv4_uint_to_str(1869573999, buffer), "111.111.111.111") == 0);
     assert(strcmp(cipv4_uint_to_str(66051, buffer), "0.1.2.3") == 0);
@@ -50,9 +52,10 @@ void test_int_to_ip(){
     assert(strcmp(cipv4_uint_to_str(16843009, buffer), "1.1.1.1") == 0);
     assert(strcmp(cipv4_uint_to_str(4294967295, buffer), "255.255.255.255") == 0);
     assert(strcmp(cipv4_uint_to_str(65537, buffer), "0.1.0.1") == 0);
+    return 0;
 }
 
-void test_general(){
+int test_general(){
     char buffer[20];
     cipv4_ctx * ctx = NULL;
     ctx = cipv4_parse_ip("10.20.30.40/24");
@@ -72,6 +75,7 @@ void test_general(){
     assert(cipv4_is_reserved(cipv4_parse_ip("240.0.0.5")) == 1);
     assert(cipv4_is_reserved_from_string("241.0.0.5") == 1);
     cipv4_free(ctx);
+    return 0;
 }
 
 int main(){
@@ -79,5 +83,6 @@ int main(){
     test_ip_to_int();
     test_int_to_ip();
     test_general();
+    fprintf(stdout, "** All tests done successfully!\n");
     return 0;
 }

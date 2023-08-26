@@ -49,6 +49,14 @@ int main(int argc, char** argv){
     cipv4_free(ctx);
 }
 ```
+## Compile
+```bash
+# compile the library
+make
+
+# run tests
+make test
+```
 
 ## Doc
 

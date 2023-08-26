@@ -27,6 +27,7 @@ dummy:
 test: $(TESTDEPS) $(TESTDEPS2) $(DEPS) $(HDEPS)
 	$(CC) $(CFLAGS) $(DEPS) $(TESTDEPS) -o test/test_1
 	$(CC) $(CFLAGS) $(DEPS) $(TESTDEPS2) -o test/test_ip
+	./test/test_ip
 
 .PHONY: clean
 clean:
